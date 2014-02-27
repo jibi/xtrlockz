@@ -10,9 +10,8 @@
 
 #include <X11/Xutil.h>
 
-#define VERSION "2.0"
 #define TIMEOUTPERATTEMPT 30000
-#define MAXGOODWILL  (TIMEOUTPERATTEMPT*5)
+#define MAXGOODWILL  (TIMEOUTPERATTEMPT * 5)
 #define INITIALGOODWILL MAXGOODWILL
 #define GOODWILLPORTION 0.3
 
@@ -48,7 +47,7 @@ main(int argc, char **argv){
 	timeout  = 0;
 
 	if (argc != 1) {
-		fprintf(stderr,"xtrlockz (version %s): no arguments allowed\n",VERSION);
+		fprintf(stderr, "xtrlockz: no arguments allowed\n");
 		exit(1);
 	}
 
@@ -56,7 +55,7 @@ main(int argc, char **argv){
 	pw    = getpwuid(getuid());
 
 	if (!pw) {
-		perror("password entry for uid not found");
+		fprintf(stderr, "password entry for uid not found");
 		exit(1);
 	}
 
@@ -79,7 +78,7 @@ main(int argc, char **argv){
 	display= XOpenDisplay(0);
 
 	if (!display) {
-		fprintf(stderr,"xtrlockz (version %s): cannot open display\n", VERSION);
+		fprintf(stderr,"xtrlockz: cannot open display\n");
 		exit(1);
 	}
 
@@ -104,13 +103,13 @@ main(int argc, char **argv){
 	}
 
 	if (gs == 0) {
-		fprintf(stderr,"xtrlockz (version %s): cannot grab keyboard\n", VERSION);
+		fprintf(stderr,"xtrlockz: cannot grab keyboard\n");
 		exit(1);
 	}
 
 	if (XGrabPointer(display, window, False, (KeyPressMask|KeyReleaseMask)&0, GrabModeAsync, GrabModeAsync, None, None, CurrentTime) != GrabSuccess) {
 		XUngrabKeyboard(display,CurrentTime);
-		fprintf(stderr,"xtrlockz (version %s): cannot grab pointer\n", VERSION);
+		fprintf(stderr,"xtrlockz: cannot grab pointer\n");
 		exit(1);
 	}
 
@@ -166,10 +165,12 @@ main(int argc, char **argv){
 						break;
 					default:
 						if (clen != 1) break;
+
 						if (rlen < (sizeof(rbuf) - 1)){
 							rbuf[rlen] = cbuf[0];
 							rlen++;
 						}
+
 						break;
 				}
 				break;
