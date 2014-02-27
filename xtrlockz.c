@@ -146,8 +146,9 @@ main(int argc, char **argv){
 
 						rbuf[rlen] = 0;
 
-						if (check_password(rbuf))
-							goto loop_x;
+						if (check_password(rbuf)) {
+							return 0;
+						}
 
 						XBell(display,0);
 						rlen = 0;
@@ -176,7 +177,7 @@ main(int argc, char **argv){
 				break;
 		}
 	}
-loop_x:
-	exit(0);
+
+	return 0;
 }
 
