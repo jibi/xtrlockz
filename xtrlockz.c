@@ -75,7 +75,7 @@ main(int argc, char **argv){
 		exit(1);
 	}
 
-	display= XOpenDisplay(0);
+	display = XOpenDisplay(0);
 
 	if (!display) {
 		fprintf(stderr,"xtrlockz: cannot open display\n");
@@ -91,7 +91,7 @@ main(int argc, char **argv){
 
 	gs = 0;
 
-	for (tvt=0 ; tvt<100; tvt++) {
+	for (tvt = 0; tvt < 100; tvt++) {
 		ret = XGrabKeyboard(display, window, False, GrabModeAsync, GrabModeAsync, CurrentTime);
 
 		if (ret == GrabSuccess) {
@@ -118,10 +118,10 @@ main(int argc, char **argv){
 		switch (ev.type) {
 			case KeyPress:
 				if (ev.xkey.time < timeout) {
-					XBell(display,0); break;
+					break;
 				}
 
-				clen = XLookupString(&ev.xkey,cbuf,9,&ks,0);
+				clen = XLookupString(&ev.xkey, cbuf, 9, &ks, 0);
 
 				switch (ks) {
 					case XK_Escape:
@@ -149,13 +149,12 @@ main(int argc, char **argv){
 							return 0;
 						}
 
-						XBell(display,0);
 						rlen = 0;
 
 						if (timeout) {
 							goodwill += ev.xkey.time - timeout;
 							if (goodwill > MAXGOODWILL) {
-								goodwill= MAXGOODWILL;
+								goodwill = MAXGOODWILL;
 							}
 						}
 
