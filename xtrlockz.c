@@ -15,6 +15,8 @@
  * GNU General Public License for more details.
  */
 
+#define _GNU_SOURCE
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
@@ -24,6 +26,9 @@
 #include <unistd.h>
 #include <math.h>
 #include <shadow.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <time.h>
 
 #include <X11/Xutil.h>
 
@@ -41,7 +46,27 @@ check_password(const char *s) {
 	int ok = !strcmp(crypt(s, pw->pw_passwd), pw->pw_passwd);
 
 	if (!ok) {
-		/* TODO: */
+		time_t cur_time;
+		char *time_str;
+		int fd;
+		
+		cur_time = time(NULL);
+		time_str = ctime(&cur_time);
+
+		if (!time_str) {
+			return ok;
+		}
+
+		time_str[strlen(time_str) - 1] = '\x00';
+
+		fd = open("/tmp/xtrlockz_fails", O_RDWR | O_CREAT | O_APPEND, 0775);
+
+		if (fd == -1) {
+			return ok;
+		}
+
+		dprintf(fd, "%s: failed login.\n", time_str);
+		close(fd);
 	}
 
 	return ok;
